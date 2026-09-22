@@ -717,7 +717,7 @@ $('closeModal').onclick=()=> $('analysisModal').classList.add('hidden'); $('anal
 async function loadRecruiterStatsOnly(){try{const jobs=await api('/recruiter/jobs');let total=0,s=0,c=0;for(const j of jobs){const a=await api(`/recruiter/jobs/${j.id}/applicants`);total+=a.length;a.forEach(x=>{if(x.analysis){s+=x.analysis.match_score;c++;}})}$('recruiterJobsStat').textContent=jobs.filter(j=>j.is_active).length;$('recruiterApplicantsStat').textContent=total;$('recruiterAvgStat').textContent=c?`${Math.round(s/c)}%`:'—';}catch{}}
 
 $('createJobBtn').onclick=async()=>{try{const payload={title:$('jobTitle').value.trim(),location:$('jobLocation').value.trim(),experience:$('jobExperience').value.trim()||'Not specified',skills:$('jobSkills').value.trim(),description:$('jobDescription').value.trim()};if(!payload.title||!payload.location||!payload.skills||payload.description.length<20)return toast('Please complete the job details.',true);await api('/recruiter/jobs',{method:'POST',body:JSON.stringify(payload)});toast('Job published.');['jobTitle','jobLocation','jobExperience','jobSkills','jobDescription'].forEach(id=>$(id).value='');loadRecruiter();}catch(e){toast(e.message,true);}};
-$('refreshRecruiterBtn').onclick=loadRecruiter;
+
 
 function renderShortlisted(data){const el=$('shortlistedList');el.innerHTML='';data.forEach(a=>{const d=document.createElement('div');d.className='app-card';d.innerHTML=`<h4>${escapeHtml(a.candidate_name)} — ${escapeHtml(a.job_title)}</h4><div class="job-meta">${escapeHtml(a.candidate_email)}</div><span class="status shortlisted">Shortlisted</span>${a.analysis?`<div class="analysis-summary">${a.analysis.match_score}% match · ${escapeHtml(a.analysis.summary)}</div>`:''}`;el.appendChild(d);});}
 
