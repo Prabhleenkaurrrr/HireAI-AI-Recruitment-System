@@ -1,4 +1,4 @@
-const API_BASE = 'http://127.0.0.1:8000/api';
+const API_BASE = 'https://hireai-backend-akheftamfthch6d5.uaenorth-01.azurewebsites.net/api';
 let selectedRole = 'candidate';
 let currentUser = null;
 let currentApplicants = [];
