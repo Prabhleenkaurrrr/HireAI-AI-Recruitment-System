@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireAI — AI Recruitment System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+
+  <section id="authView" class="auth-shell">
+    <div class="brand-panel">
+      <div class="brand-mark">H</div>
+      <h1>HireAI</h1>
+      <p>AI-powered recruitment assistance for faster, evidence-based hiring workflows.</p>
+      <div class="feature-list">
+        <span>✓ Resume analysis against job requirements</span>
+        <span>✓ Candidate application tracking</span>
+        <span>✓ AI-generated interview questions</span>
+        <span>✓ Recruiter-controlled final decisions</span>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="role-switch">
+        <button class="role-btn active" data-role="candidate">Candidate</button>
+        <button class="role-btn" data-role="recruiter">Recruiter</button>
+      </div>
+      <div class="auth-tabs">
+        <button id="loginTab" class="tab active">Login</button>
+        <button id="signupTab" class="tab">Create account</button>
+      </div>
+
+      <div id="loginForm" class="form-card">
+        <h2>Welcome back</h2>
+        <p class="muted">Login with your registered role.</p>
+        <label>Email<input id="loginEmail" type="email" placeholder="you@example.com" /></label>
+        <label>Password<input id="loginPassword" type="password" placeholder="••••••••" /></label>
+        <button id="loginBtn" class="primary full">Login</button>
+      </div>
+
+      <div id="signupForm" class="form-card hidden">
+        <h2>Create your account</h2>
+        <p class="muted">Your password is hashed by the backend and never sent to the AI model.</p>
+        <label>Full name<input id="signupName" type="text" placeholder="Your name" /></label>
+        <label>Email<input id="signupEmail" type="email" placeholder="you@example.com" /></label>
+        <label>Password<input id="signupPassword" type="password" placeholder="Minimum 6 characters" /></label>
+        <label>Confirm password<input id="signupConfirm" type="password" placeholder="Repeat password" /></label>
+        <button id="signupBtn" class="primary full">Create account</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="appView" class="app-shell hidden">
+    <header class="topbar">
+      <div class="top-brand"><span class="brand-mark small">H</span><span>HireAI</span></div>
+      <div class="user-menu"><span id="userGreeting"></span><span id="roleBadge" class="badge"></span><button id="logoutBtn" class="ghost">Logout</button></div>
+    </header>
+
+    <main id="candidateDashboard" class="dashboard hidden">
+      <div class="page-heading"><div><p class="eyebrow">CANDIDATE</p><h2>Your career dashboard</h2><p class="muted">Upload your resume, apply to roles and track recruiter decisions.</p></div></div>
+      <div class="chatbot-launch">
+  <button id="openInterviewChat" class="primary">
+    🤖 AI Interview Assistant
+  </button>
+  <p class="muted">Practice interview questions based on your applied jobs.</p>
+</div>
+      <div class="stats-grid">
+        <div class="stat"><span>Resume</span><strong id="candidateResumeStat">Missing</strong></div>
+        <div class="stat"><span>Available jobs</span><strong id="candidateJobsStat">0</strong></div>
+        <div class="stat"><span>Applications</span><strong id="candidateAppsStat">0</strong></div>
+        <div class="stat"><span>Shortlisted</span><strong id="candidateShortlistedStat">0</strong></div>
+      </div>
+
+      <div class="two-col">
+        <section class="panel">
+          <div class="panel-head"><div><h3>My resume</h3><p class="muted">PDF, DOCX, TXT or MD · max 5 MB</p></div></div>
+          <div class="upload-box"><input id="resumeFile" type="file" accept=".pdf,.docx,.txt,.md" /><button id="uploadResumeBtn" class="secondary">Upload / replace resume</button><div id="resumeInfo" class="muted"></div></div>
+        </section>
+        <section class="panel"><div class="panel-head"><div><h3>Application status</h3><p class="muted">Recruiter updates appear here.</p></div></div><div id="candidateApplications" class="list"></div></section>
+      </div>
+
+      <section class="panel"><div class="panel-head"><div><h3>Open positions</h3><p class="muted">You need a resume before applying.</p></div><button id="refreshJobsBtn" class="ghost">Refresh</button></div><div id="jobsList" class="cards"></div></section>
+    </main>
+
+    <main id="recruiterDashboard" class="dashboard hidden">
+      <div class="page-heading"><div><p class="eyebrow">RECRUITER</p><h2>Recruitment workspace</h2><p class="muted">Create roles, review applicants and run one AI analysis per application.</p></div></div>
+      <div class="stats-grid">
+        <div class="stat"><span>Active jobs</span><strong id="recruiterJobsStat">0</strong></div>
+        <div class="stat"><span>Applicants</span><strong id="recruiterApplicantsStat">0</strong></div>
+        <div class="stat"><span>Shortlisted</span><strong id="recruiterShortlistedStat">0</strong></div>
+        <div class="stat"><span>AI match average</span><strong id="recruiterAvgStat">—</strong></div>
+      </div>
+
+      <div class="two-col recruiter-top">
+        <section class="panel"><div class="panel-head"><div><h3>Create a job</h3><p class="muted">The job description is sent to Foundry only when an application is analyzed.</p></div></div>
+          <div class="form-grid">
+            <label>Job title<input id="jobTitle" placeholder="AI/ML Intern" /></label>
+            <label>Location<input id="jobLocation" placeholder="Chandigarh / Remote" /></label>
+            <label>Required experience<input id="jobExperience" placeholder="0–2 years" /></label>
+            <label>Required skills<input id="jobSkills" placeholder="Python, ML, SQL, Azure" /></label>
+          </div>
+          <label>Job description<textarea id="jobDescription" rows="6" placeholder="Describe responsibilities, requirements and relevant technologies..."></textarea></label>
+          <button id="createJobBtn" class="primary">Publish job</button>
+        </section>
+        <section class="panel"><div class="panel-head"><div><h3>My jobs</h3><p class="muted">Select a job to view applicants.</p></div></div><div id="recruiterJobs" class="list"></div></section>
+      </div>
+
+      <section id="applicantsPanel" class="panel hidden">
+
+  <div class="panel-head">
+    <div>
+      <h3 id="applicantsTitle">Applicants</h3>
+      <p class="muted">
+        Analyze applicants with AI and review the recommended matches.
+      </p>
+    </div>
+
+    <div class="card-actions">
+      <button id="analyzeAllBtn" class="primary">
+        🤖 Analyze All Applications
+      </button>
+
+      <button id="openRecruiterAssistant" class="secondary">
+        🤖 AI Interview Assistant
+      </button>
+    </div>
+  </div>
+
+  <div id="bulkActions" class="bulk-actions hidden">
+
+    <button id="selectTopBtn" class="secondary">
+      Select Top Matches
+    </button>
+
+    <button id="shortlistSelectedBtn" class="primary">
+      Shortlist Selected
+    </button>
+
+    <button id="rejectSelectedBtn" class="ghost">
+      Reject Selected
+    </button>
+
+  </div>
+
+  <div id="bulkStatus" class="muted"></div>
+
+  <div id="applicantsList" class="cards"></div>
+
+</section>
+      <section class="panel"><div class="panel-head"><div><h3>Shortlisted candidates</h3><p class="muted">Final hiring decisions remain with the recruiter.</p></div></div><div id="shortlistedList" class="cards"></div></section>
+    </main>
+  </section>
+
+  <div id="analysisModal" class="modal hidden"><div class="modal-card"><button id="closeModal" class="modal-close">×</button><div id="analysisContent"></div></div></div>
+  <div id="interviewChatModal" class="modal hidden">
+  <div class="modal-card interview-chat-card">
+
+    <button id="closeInterviewChat" class="modal-close">×</button>
+
+    <p class="eyebrow">AI INTERVIEW ASSISTANT</p>
+    <h2>Prepare for your interview</h2>
+    <p class="muted">
+      Ask questions, practice answers or start a mock interview.
+    </p>
+
+    <label>
+      Select applied job
+      <select id="chatJobSelect">
+        <option value="">Select a job</option>
+      </select>
+    </label>
+
+    <div id="chatMessages" class="chat-messages">
+      <div class="chat-message assistant">
+        Hi! I'm your HireAI Interview Assistant. Select a job and ask me anything about your interview preparation.
+      </div>
+    </div>
+
+    <div class="chat-input-row">
+      <input
+        id="chatInput"
+        type="text"
+        placeholder="Ask me an interview question..."
+        maxlength="2000"
+      />
+      <button id="sendChatBtn" class="primary">Send</button>
+    </div>
+
+  </div>
+</div>
+<div id="recruiterAssistantModal" class="modal hidden">
+  <div class="modal-card recruiter-assistant-card">
+
+    <button id="closeRecruiterAssistant" class="modal-close">×</button>
+
+    <p class="eyebrow">RECRUITER AI ASSISTANT</p>
+    <h2>Interview Assistant</h2>
+    <p class="muted">
+      Get interview preparation help based on the selected candidate and job.
+    </p>
+    <label>
+  Select candidate
+  <select id="recruiterAssistantCandidate">
+    <option value="">Select a candidate</option>
+  </select>
+</label>
+
+    <div id="recruiterAssistantContent">
+      <p class="muted">Select an applicant first.</p>
+    </div>
+
+    <div class="chat-input-row">
+      <input
+        id="recruiterAssistantInput"
+        type="text"
+        placeholder="Ask about interview questions..."
+        maxlength="2000"
+      />
+      <button id="sendRecruiterAssistant" class="primary">Ask AI</button>
+    </div>
+
+    <div id="recruiterAssistantMessages" class="chat-messages">
+    </div>
+
+  </div>
+</div>
+  <script src="app.js"></script>
+</body>
+</html>

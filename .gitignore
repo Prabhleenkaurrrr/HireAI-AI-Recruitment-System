@@ -1,0 +1,12 @@
+.env
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+uploads/*
+!uploads/.gitkeep
+.DS_Store
