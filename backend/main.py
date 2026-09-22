@@ -119,6 +119,7 @@ app.add_middleware(
     "http://127.0.0.1:8080",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://joyful-kitsune-762ef5.netlify.app",
 ],
     allow_credentials=True,
     allow_methods=["*"],
