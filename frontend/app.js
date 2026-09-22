@@ -724,6 +724,16 @@ function renderShortlisted(data){const el=$('shortlistedList');el.innerHTML='';d
 function escapeHtml(value){return String(value??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 
 (async function init(){
-  if(!token()) return;
-  try { currentUser=JSON.parse(localStorage.getItem('hireai_user')); await api('/me'); showApp(); } catch { localStorage.removeItem('hireai_token'); localStorage.removeItem('hireai_user'); }
+  const savedToken = token();
+  const savedUser = localStorage.getItem('hireai_user');
+
+  if (!savedToken || !savedUser) return;
+
+  try {
+    currentUser = JSON.parse(savedUser);
+    showApp();
+  } catch {
+    localStorage.removeItem('hireai_token');
+    localStorage.removeItem('hireai_user');
+  }
 })();
