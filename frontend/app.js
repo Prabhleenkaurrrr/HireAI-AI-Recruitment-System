@@ -95,7 +95,7 @@ $('uploadResumeBtn').onclick = async () => {
   const file = $('resumeFile').files[0]; if (!file) return toast('Choose a resume file first.', true);
   try { const fd = new FormData(); fd.append('file', file); await api('/candidate/resume',{method:'POST',body:fd}); toast('Resume uploaded successfully.'); loadCandidate(); } catch(e){toast(e.message,true);}
 };
-$('refreshJobsBtn').onclick = loadCandidate;
+
 
 
 // ================= RECRUITER AI ASSISTANT =================
