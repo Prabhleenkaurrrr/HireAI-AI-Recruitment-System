@@ -21,7 +21,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, rela
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
-DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR / 'hireai.db'}")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:////home/hireai.db")
 JWT_SECRET = os.getenv("JWT_SECRET", "dev-only-change-this-secret")
 JWT_ALGORITHM = "HS256"
 TOKEN_EXPIRE_MINUTES = 60 * 12
