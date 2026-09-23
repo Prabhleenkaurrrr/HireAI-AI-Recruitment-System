@@ -18,7 +18,19 @@ async function api(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, {...options, headers});
   const text = await res.text();
   let data = {}; try { data = text ? JSON.parse(text) : {}; } catch { data = {detail:text}; }
-  if (!res.ok) throw new Error(data.detail || `Request failed (${res.status})`);
+  if (!res.ok) {
+  let message = `Request failed (${res.status})`;
+
+  if (typeof data.detail === 'string') {
+    message = data.detail;
+  } else if (Array.isArray(data.detail)) {
+    message = data.detail
+      .map(err => err.msg || 'Invalid input')
+      .join(', ');
+  }
+
+  throw new Error(message);
+}
   return data;
 }
 
