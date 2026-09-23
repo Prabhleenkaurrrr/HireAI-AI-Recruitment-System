@@ -46,8 +46,18 @@ $('signupTab').onclick = () => { $('signupTab').classList.add('active'); $('logi
 $('signupBtn').onclick = async () => {
   try {
     const name = $('signupName').value.trim(), email = $('signupEmail').value.trim(), password = $('signupPassword').value, confirm_password = $('signupConfirm').value;
-    if (!name || !email || !password) return toast('Please fill all required fields.', true);
-    await api('/auth/signup', {method:'POST', body: JSON.stringify({name,email,password,confirm_password,role:selectedRole})});
+    if (!name || !email || !password || !confirm_password) {
+  return toast('Please fill all required fields.', true);
+}
+
+    if (password !== confirm_password) {
+  return toast('Passwords do not match', true);
+}
+
+await api('/auth/signup', {
+  method: 'POST',
+  body: JSON.stringify({name, email, password, confirm_password, role: selectedRole})
+});
     toast('Account created. You can now log in.');
     $('loginEmail').value = email; $('signupPassword').value = ''; $('signupConfirm').value = '';
     $('loginTab').click();
